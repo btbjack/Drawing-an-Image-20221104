@@ -1,22 +1,25 @@
 //Global Variables
 int appWidth, appHeight;
 float backgroundImageX, backgroundImageY, backgroundImageWidth, backgroundImageHeight;
-float smallerDimension, largerDimension, imageWidthRatio=0.0, imageHeightRatio=0.0;
-Boolean widthLarger=false, heightLarger=false;
+float picWidthAdjusted=0.0, picHeightAdjusted=0.0;
 PImage pic;
 Boolean nightMode=false;
+int tintDayMode=255, tintDayModeOpacity=50, tintRed=64, tintGreen=64, tintBlue=40, tintNightModeOpacity=85;
 //
-size(700, 500); //Landscape
+void setup() {
+  size(700, 500); //Landscape
 //Copy Display Algorithm
 appWidth = width;
 appHeight = height;
 //
-//Aspect Ratio of Background Image
+//Image Dimensions 
 //FIFA-2022-Background-HD-Wallpapers-126306.jpg
 //Note: Dimesions are found in the image file / Right Click / Properties / Details
 int picWidth = 800;
 int picHeight = 600;
 //Image Orientation: Landscape, Square, Portrait
+float smallerDimension, largerDimension, imageWidthRatio=0.0, imageHeightRatio=0.0;
+Boolean widthLarger=false, heightLarger=false;
 if ( picWidth >= picHeight ) { //True if Landscape or Square
   largerDimension = picWidth;
   smallerDimension = picHeight;
@@ -27,16 +30,11 @@ if ( picWidth >= picHeight ) { //True if Landscape or Square
   heightLarger = true;
 }
 //
-/*Aspect Ratio Calculations
- if ( widthLarger == true ) imageWidthRatio = largerDimension / largerDimension;
- if ( widthLarger == true ) imageHeightRatio = smallerDimension / largerDimension;
- if ( heightLarger == true ) imageWidthRatio = smallerDimension / largerDimension;
- if ( heightLarger == true ) imageHeightRatio = largerDimension / largerDimension;
- */
+//Teaching Example: width is known to be larger 
 //
 //Better Image Stretch Algorithm
 //We know the width is the larger dimension
-float picWidthAdjusted, picHeightAdjusted;
+
 if ( appWidth >= picWidth ) {
   picWidthAdjusted = appWidth;
   //
@@ -46,14 +44,21 @@ if ( appWidth >= picWidth ) {
   if ( appHeight >= picHeight) {
     //Calculated Diemension b/c smller than width
     if ( widthLarger == true ) imageWidthRatio = largerDimension / largerDimension;
-    if ( heightLarger == true ) imageWidthRatio = smallerDimension / largerDimension;
     picHeightAdjusted = backgroundImageHeight * imageHeightRatio;
-    ] else {
+    if ( appHeight < picHeightAdjusted ) {
+      println("STOP: image is tooo big for CANVAS");
+    
+    }
+  } else {
       //Image smaller than CANVAS, needs separate algorithm
+       println("STOP: image is tooo big for CANVAS");
+        
     }
   } else {
     //Image smaller than CANVAS, needs separate algorithm
+    println("CANVAS is smaller than image");
   }
+  //
   //Population
   pic = loadImage("../Images Used/FIFA-2022-Background-HD-Wallpapers-126306.jpg");
   backgroundImageX = appWidth*0;
@@ -61,15 +66,40 @@ if ( appWidth >= picWidth ) {
   backgroundImageWidth = appWidth-1;
   backgroundImageHeight = appHeight-1;
   //
-  // Adjust Iamge Varaibles for Asepct Ratio
-  picWidthAdjusted = backgroundImageWidth * imageWidthRatio;
-  picHeightAdjusted = backgroundImageHeight * imageHeightRatio;
+  //Verify Variables Values after Algorithm
+  println("App Width:", appWidth, "and App Height:", appHeight);
+  println("Image dimentions are:", picWidth, picHeight);
+  println("Larger Image dimension is:", largerDimension);
+  println("Adjusted Image dimensions are (stretch is goal):", picWidthAdjusted, picHeightAdjusted);
   //
-  println( appWidth, picWidth, picWidthAdjusted);
-  println( appHeight, picHeight, picHeightAdjusted);
-  //Rectangular Layout and Imgage Drawing to CANVAS
+   //Rectangular Layout and Imgage Drawing to CANVAS
   //rect(backgroundImageX, backgroundImageY, backgroundImageWidth, backgroundImageHeight );
   //
-  if ( nightMode == false ) tint(255, 64); //Gray Scale, Day use: use 1/2 tint value for white (i.e. 128/256=1/2)
-  if ( nightMode == true ) tint(64, 64, 40); //RGB: Night Mode
+  //Background Image must be single executed code
+   if ( nightMode == false ) tint(tintDayMode, tintDayModeOpacity); //Gray Scale, Day use: use 1/2 tint value for white (i.e. 128/256=1/2)
+  if ( nightMode == true ) tint(tintRed, tintGreen, tintBlue, tintNightModeOpacity); //RGB: Night Mode
   image( pic, backgroundImageX, backgroundImageY, picWidthAdjusted, picHeightAdjusted);
+}//End setup
+//
+void draw() {}//End draw
+//
+void keyPressed() {}//End keyPressed
+//
+void mousePressed() {
+//
+//Mouse Pressed will control background image
+if (mouseButton == LEFT) {
+nightMode = true;
+tint(64, 64, 40, 50)
+image( pic, backgroundImageX, backgroundImageY, picWidthAdjusted, picHeightAdjusted);
+
+}
+if (mouseButton == RIGHT) {
+nightMode = false;
+tint(255, 50); //Gray Scale: use 1/2 tint value for white (i.e
+}
+}//
+//End Main Program
+
+ 
+ 
